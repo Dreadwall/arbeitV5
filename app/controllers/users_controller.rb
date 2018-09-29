@@ -10,7 +10,6 @@ class UsersController < ApplicationController
     @user_assignments = @user.assignments.active.by_project
     @created_tasks = Task.for_creator(@user.id).by_name
     @completed_tasks = Task.for_completer(@user.id).by_name
-    flash_codes
   end
 
   def new
@@ -22,6 +21,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    if @user.role.nil?
+      @user.role = "member"
+    end
     if @user.save
       session[:user_id] = @user.id
       redirect_to home_path, notice: "Thank you for signing up!"
@@ -33,11 +35,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update_attributes(user_params)
-      if !current_user || current_user != @user
-        flash[:notice] = "Congratulations! You've successfully executed a CSRF. Write down the following code so we know you've reached this page: <p align=\”center\"><strong>#{Base64.encode64('completedCSRF')}</strong></p>"
-      else
-        flash[:notice] = "#{@user.proper_name} is updated."
-      end
+      flash[:notice] = "#{@user.proper_name} is updated."
       redirect_to @user
     else
       render :action => 'edit'
