@@ -7,12 +7,11 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to root_url, notice: "Logged in!"
+    elsif user
+      flash.now.alert = "Password invalid"
+      render "new" 
     else
-      if user.nil?
-        flash.now.alert = "Email does not belong to a user in the system"
-      else
-        flash.now.alert = "Password is invalid..."
-      end
+      flash.now.alert = "Email invalid"
       render "new"
     end
   end
