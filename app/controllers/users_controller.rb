@@ -58,6 +58,7 @@ class UsersController < ApplicationController
   private
     def set_user
       @user = User.find(params[:id])
+      logger.info(@user.as_json)
     end
 
     def user_params
