@@ -2,8 +2,6 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Rotate logs daily to keep file sizes down
-  #config.logger = Logger.new("log/#{Rails.env}.log", "daily")
-
   logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
